@@ -1,33 +1,20 @@
-"""
-URL configuration for edupro360 project.
-
-EduPro 360 - Academic Management API
-"""
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
-from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
-    # Admin
-    path('admin/', admin.site.urls),
-    
-    # API v1
-    path('api/auth/', include('Users.urls')),
-    path('api/academic/', include('Academic.urls')),
-    
-    # JWT Token Refresh
-    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    #  Panel de administración
+    path("admin/", admin.site.urls),
+
+    #  Autenticación JWT
+    # Login: devuelve access + refresh
+    path("api/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    # Refresh: renueva el access token
+    path("api/auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+
+    #  Gestión de usuarios y roles (Usuarios/urls.py)
+    path("api/", include("Usuarios.urls")),
 ]
-
-# Servir archivos media en desarrollo
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-# Personalizar el admin
-admin.site.site_header = "EduPro 360 - Administración"
-admin.site.site_title = "EduPro 360"
-admin.site.index_title = "Panel de Administración"
-

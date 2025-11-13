@@ -5,7 +5,7 @@ y enviarle correo de bienvenida con sus credenciales
 from django.core.management.base import BaseCommand
 from django.core.mail import send_mail
 from django.conf import settings
-from Users.models import CustomUser, Role
+from Usuarios.models import CustomUser, Role
 
 
 class Command(BaseCommand):

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     # Local Apps
     'Base',
     'Usuarios',
+    'Academico',
 ]
 
 MIDDLEWARE = [

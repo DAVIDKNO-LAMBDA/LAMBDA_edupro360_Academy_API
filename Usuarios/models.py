@@ -61,8 +61,11 @@ class Usuario(BaseModel, AbstractBaseUser, PermissionsMixin):
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
         permissions = [
-            ("gestionar_usuarios", "Puede gestionar usuarios"),
-            ("gestionar_roles_permisos", "Puede gestionar roles y permisos"),
+            ("gestionar_usuarios", "Puede gestionar usuarios (crear, editar, bloquear)"),
+            ("gestionar_roles_permisos", "Puede gestionar roles y permisos del sistema"),
+            ("cambiar_password_propio", "Puede cambiar su propia contraseña"),
+            ("forzar_reset_password_usuarios", "Puede forzar reset de contraseña de otros usuarios"),
+            ("recibir_notificacion_estado_mensual", "Puede recibir reporte mensual de desempeño académico"),
         ]
 
     def __str__(self):

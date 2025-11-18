@@ -33,7 +33,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             }
             enviar_correo(
                 asunto="Activa tu cuenta en EduPro360",
-                plantilla="Usuarios/correos/activacion_cuenta.html",
+                plantilla="users/activacion_cuenta.html",
                 contexto=contexto,
                 destinatarios=[user.correo],
             )
@@ -41,8 +41,9 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["post"], permission_classes=[AllowAny], url_path="activar-cuenta")
     def activar_cuenta(self, request):
         token = request.data.get("token")
-        if not token:
-            return Response({"detail": "Token requerido."}, status=status.HTTP_400_BAD_REQUEST)
+        password = request.data.get("password")
+        if not token or not password:
+            return Response({"detail": "Token y password son requeridos."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             user = Usuario.objects.get(activation_token=token)
@@ -52,8 +53,9 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         if not user.validate_activation_token(token):
             return Response({"detail": "Token expirado."}, status=status.HTTP_400_BAD_REQUEST)
 
+        user.set_password(password)
         user.activate_user()
-        return Response({"detail": "Cuenta activada correctamente."}, status=status.HTTP_200_OK)
+        return Response({"detail": "Cuenta activada y contraseña definida correctamente."}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["post"], permission_classes=[AllowAny], url_path="solicitar-reset-password")
     def solicitar_reset_password(self, request):
@@ -113,6 +115,48 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
 
 class GroupViewSet(viewsets.ModelViewSet):
+    @action(detail=False, methods=["get"], permission_classes=[IsAdminUser], url_path="todos-permisos")
+    def todos_permisos(self, request):
+        from django.contrib.auth.models import Permission
+        permisos = Permission.objects.all()
+        resultado = []
+        for permiso in permisos:
+            resultado.append({
+                "id": permiso.id,
+                "codename": permiso.codename,
+                "name": permiso.name,
+                "content_type": permiso.content_type.model
+            })
+        return Response(resultado)
+
+    @action(detail=True, methods=["get"], permission_classes=[IsAdminUser], url_path="permisos")
+    def listar_permisos(self, request, pk=None):
+        from django.contrib.auth.models import Permission
+        grupo = self.get_object()
+        permisos = Permission.objects.all()
+        resultado = []
+        for permiso in permisos:
+            resultado.append({
+                "id": permiso.id,
+                "codename": permiso.codename,
+                    "name": permiso.name,
+                    "asignado": grupo.permissions.filter(id=permiso.id).exists()
+                })
+            return Response(resultado)
+
+        @action(detail=False, methods=["get"], permission_classes=[IsAdminUser], url_path="todos-permisos")
+        def todos_permisos(self, request):
+            from django.contrib.auth.models import Permission
+            permisos = Permission.objects.all()
+            resultado = []
+            for permiso in permisos:
+                resultado.append({
+                    "id": permiso.id,
+                    "codename": permiso.codename,
+                    "name": permiso.name,
+                    "content_type": permiso.content_type.model
+                })
+            return Response(resultado)
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [IsAdminUser]

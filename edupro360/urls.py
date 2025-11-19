@@ -17,4 +17,8 @@ urlpatterns = [
 
     #  Gestión de usuarios y roles (Usuarios/urls.py)
     path("api/", include("Usuarios.urls")),
+    
+    #  Módulo académico (Academico/urls.py)
+    path("api/academico/", include("Academico.urls")),
 ]
+

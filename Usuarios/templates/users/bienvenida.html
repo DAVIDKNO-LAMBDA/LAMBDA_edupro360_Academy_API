@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido a EduPro 360</title>
+</head>
+<body>
+    <h2>Hola {{ nombre }} {{ apellido }},</h2>
+    <p>Tu cuenta ha sido creada exitosamente en EduPro 360.</p>
+    <p><b>Tus credenciales de acceso son:</b></p>
+    <ul>
+        <li><b>Correo:</b> {{ correo }}</li>
+        <li><b>Contraseña:</b> {{ password }}</li>
+        <li><b>Rol asignado:</b> {{ rol }}</li>
+    </ul>
+    <p>Por seguridad, te recomendamos cambiar tu contraseña después del primer inicio de sesión.</p>
+    <p>Puedes acceder al sistema en: <a href="http://localhost:8000/api/users/login/">Iniciar sesión</a></p>
+    <br>
+    <p>¡Bienvenido a EduPro 360!</p>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Asignación - EduPro 360</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .greeting {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            background: #f8f9fa;
+            border-left: 5px solid #4CAF50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .info-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            flex: 1;
+        }
+        
+        .info-value {
+            flex: 2;
+            text-align: right;
+            color: #333;
+        }
+        
+        .action-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 20px auto;
+            text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .highlight {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .info-value {
+                text-align: left;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Nueva Asignación Docente</h1>
+        </div>
+        
+        <div class="content">
+            <h2>¡Hola {{ docente.nombres }} {{ docente.apellidos }}!</h2>
+            
+            <div class="message">
+                <p><strong>¡Felicitaciones!</strong> Se te ha asignado una nueva asignatura en EduPro 360.</p>
+                <p>A partir de ahora podrás gestionar todas las actividades académicas de esta materia.</p>
+            </div>
+            
+            <div class="info-card">
+                <h3 style="margin-top: 0; color: #4CAF50;">📋 Detalles de la Asignación</h3>
+                
+                <div class="info-row">
+                    <span class="info-label">Asignatura:</span>
+                    <span class="info-value"><strong>{{ asignatura.nombre }}</strong></span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Código:</span>
+                    <span class="info-value">{{ asignatura.codigo }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Período:</span>
+                    <span class="info-value">{{ periodo.nombre }}</span>
+                </div>
+                
+                {% if asignatura.descripcion %}
+                <div class="info-row">
+                    <span class="info-label">Descripción:</span>
+                    <span class="info-value">{{ asignatura.descripcion }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="info-row">
+                    <span class="info-label">Fecha de Asignación:</span>
+                    <span class="info-value">{{ fecha_asignacion|date:"d/m/Y H:i" }}</span>
+                </div>
+            </div>
+            
+            <div class="message">
+                <h4>🎯 ¿Qué puedes hacer ahora?</h4>
+                <ul>
+                    <li><strong>Crear tareas y evaluaciones</strong> para tus estudiantes</li>
+                    <li><strong>Gestionar entregas</strong> y calificar trabajos</li>
+                    <li><strong>Revisar inscripciones</strong> de estudiantes</li>
+                    <li><strong>Generar reportes</strong> de desempeño académico</li>
+                    <li><strong>Recibir notificaciones automáticas</strong> sobre entregas</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="#" class="action-button">
+                    🚀 Acceder a la Plataforma
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>EduPro 360</strong> - Sistema de Gestión Académica</p>
+            <p>Este es un correo automático, por favor no respondas a esta dirección.</p>
+            <p style="margin-top: 15px;">
+                <span class="highlight">💡 Tip:</span> Guarda este correo para futuras referencias sobre tu asignación.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

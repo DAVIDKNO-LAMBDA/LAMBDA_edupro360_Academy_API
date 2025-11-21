@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Entrega de Tarea</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            padding: 25px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 30px;
+            color: #333333;
+            line-height: 1.6;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-box p {
+            margin: 8px 0;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .status.entregada {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status.atrasada {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .icon {
+            font-size: 48px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .footer {
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777777;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 20px 0;
+            background-color: #667eea;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Nueva Entrega de Tarea</h1>
+        </div>
+        
+        <div class="content">
+            <div class="icon">🎓</div>
+            
+            <p>Hola <strong>{{ docente_nombre }}</strong>,</p>
+            
+            <p>Te informamos que has recibido una nueva entrega de tarea en <strong>EduPro360</strong>.</p>
+            
+            <div class="info-box">
+                <p><strong>📚 Asignatura:</strong> {{ asignatura }}</p>
+                <p><strong>📋 Tarea:</strong> {{ tarea_titulo }}</p>
+                <p><strong>👤 Estudiante:</strong> {{ estudiante_nombre }}</p>
+                <p><strong>📅 Fecha de entrega:</strong> {{ fecha_entrega|date:"d/m/Y H:i" }}</p>
+                <p><strong>📊 Estado:</strong> 
+                    <span class="status {% if estado == 'ENTREGADA' %}entregada{% else %}atrasada{% endif %}">
+                        {{ estado }}
+                    </span>
+                </p>
+                <p><strong>📎 Archivo adjunto:</strong> {% if tiene_archivo %}Sí{% else %}No{% endif %}</p>
+            </div>
+            
+            {% if estado == 'ATRASADA' %}
+            <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                <p style="margin: 0; color: #856404;">
+                    <strong>⚠️ Nota:</strong> Esta entrega fue realizada después de la fecha de vencimiento.
+                </p>
+            </div>
+            {% endif %}
+            
+            <p>Puedes revisar la entrega y calificarla accediendo al sistema.</p>
+            
+            <div style="text-align: center;">
+                <a href="#" class="button">Ver Entrega</a>
+            </div>
+            
+            <p style="margin-top: 30px;">Atentamente,<br>
+            <strong>Equipo de EduPro360</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 EduPro360 - Sistema de Gestión Académica</p>
+            <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+        </div>
+    </div>
+</body>
+</html>

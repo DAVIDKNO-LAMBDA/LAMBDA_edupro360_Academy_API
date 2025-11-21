@@ -111,6 +111,38 @@ class Tarea(BaseModel):
 		verbose_name="Tipo de tarea",
 	)
 
+	def clean(self):
+		"""Validar que los pesos porcentuales no excedan 100% por asignatura"""
+		from django.core.exceptions import ValidationError
+		from django.db.models import Sum
+		
+		# Obtener suma actual de pesos para esta asignatura (excluyendo esta instancia)
+		total_peso_actual = Tarea.objects.filter(
+			asignatura=self.asignatura,
+			estado=True
+		).exclude(id=self.id).aggregate(
+			total=Sum('peso_porcentual')
+		)['total'] or 0
+		
+		# Validar que no exceda 100%
+		nuevo_total = float(total_peso_actual) + float(self.peso_porcentual)
+		if nuevo_total > 100:
+			raise ValidationError({
+				'peso_porcentual': f'El peso porcentual ({self.peso_porcentual}%) excede el límite. '
+								 f'Peso actual usado: {total_peso_actual}%. '
+								 f'Máximo disponible: {100 - total_peso_actual}%'
+			})
+		
+		# Validar fechas
+		if self.fecha_vencimiento <= self.fecha_publicacion:
+			raise ValidationError({
+				'fecha_vencimiento': 'La fecha de vencimiento debe ser posterior a la fecha de publicación.'
+			})
+
+	def save(self, *args, **kwargs):
+		self.full_clean()
+		super().save(*args, **kwargs)
+
 	class Meta:
 		verbose_name = "Tarea / Evaluación"
 		verbose_name_plural = "Tareas / Evaluaciones"

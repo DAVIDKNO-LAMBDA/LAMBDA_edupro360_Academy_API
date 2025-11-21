@@ -70,6 +70,10 @@ class Usuario(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.nombres} {self.apellidos}".title()
+    
+    def get_full_name(self):
+        """Devuelve el nombre completo del usuario"""
+        return f"{self.nombres} {self.apellidos}".strip()
 
     # ---- RESET TOKEN ----
     def create_reset_token(self):
@@ -102,3 +106,50 @@ class Usuario(BaseModel, AbstractBaseUser, PermissionsMixin):
         self.activation_token = None
         self.activation_token_expires_at = None
         self.save()
+
+    def set_password(self, raw_password):
+        """Override para guardar historial de contraseñas"""
+        from .validators import validate_password_strength
+        
+        # Validar fortaleza de la contraseña
+        validate_password_strength(raw_password, self)
+        
+        # Guardar contraseña anterior en el historial (si existe)
+        if self.pk and self.password:
+            PasswordHistory.objects.create(
+                user=self,
+                password_hash=self.password
+            )
+            
+            # Mantener solo las últimas 5 contraseñas
+            old_passwords = PasswordHistory.objects.filter(user=self).order_by('-creado')[5:]
+            for old_pass in old_passwords:
+                old_pass.delete()
+        
+        # Establecer nueva contraseña
+        super().set_password(raw_password)
+
+
+class PasswordHistory(BaseModel):
+    """
+    Modelo para mantener historial de contraseñas y evitar reutilización
+    """
+    user = models.ForeignKey(
+        Usuario,
+        on_delete=models.CASCADE,
+        related_name='password_history',
+        verbose_name="Usuario"
+    )
+    password_hash = models.CharField(
+        max_length=128,
+        verbose_name="Hash de contraseña anterior"
+    )
+
+    class Meta:
+        db_table = "usuarios_password_history"
+        verbose_name = "Historial de Contraseña"
+        verbose_name_plural = "Historial de Contraseñas"
+        ordering = ['-creado']
+
+    def __str__(self):
+        return f"Contraseña de {self.user} - {self.creado.strftime('%d/%m/%Y %H:%M')}"

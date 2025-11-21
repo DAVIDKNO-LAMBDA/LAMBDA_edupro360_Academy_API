@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'django_celery_beat',
+    'django_celery_results',
     
     # Local Apps
     'Base',
@@ -106,10 +107,20 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'Usuarios.validators.CustomPasswordValidator',
+        'OPTIONS': {
+            'min_length': 8,
+            'admin_min_length': 12,
+        }
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'Usuarios.validators.PasswordHistoryValidator',
+        'OPTIONS': {
+            'history_count': 3,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',

@@ -35,8 +35,10 @@ class UsuarioSerializer(serializers.ModelSerializer):
             user.set_password(password)
         else:
             # Password temporal aleatoria (el usuario la cambiará al activar)
-            password_temporal = secrets.token_urlsafe(16)
-            user.set_password(password_temporal)
+            # Usamos directamente set_password de Django sin validaciones adicionales
+            password_temporal = secrets.token_urlsafe(16) + "!Temp1"  # Agregamos caracteres para cumplir validaciones
+            from django.contrib.auth.models import AbstractBaseUser
+            AbstractBaseUser.set_password(user, password_temporal)
         
         user.save()
         

@@ -1,7 +1,15 @@
 """
 Script para crear los grupos/roles iniciales del sistema
-Ejecutar con: python manage.py shell < setup_grupos.py
+Ejecutar con: python setup_grupos.py
 """
+import os
+import django
+from django.conf import settings
+
+# Configurar Django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'edupro360.settings')
+django.setup()
+
 from django.contrib.auth.models import Group, Permission
 
 print("🚀 Creando grupos y asignando permisos...\n")

@@ -59,7 +59,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
                 "rol": rol,
             }
             enviar_correo(
-                asunto="Activa tu cuenta en EduPro360",
+                asunto=f"Activa tu cuenta en EduPro360 - Rol: {rol.title()}",
                 plantilla="users/activacion_cuenta.html",
                 contexto=contexto,
                 destinatarios=[user.correo],
